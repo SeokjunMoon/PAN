@@ -1,0 +1,10 @@
+{
+    "development" : {
+        "username": "root",
+        "password": "ms38559851!",
+        "database": "pnu_parser",
+        "host": "104.196.224.16",
+        "port": "3306",
+        "dialect": "mysql"
+    }
+}
