@@ -1,22 +1,39 @@
 .App {
   text-align: center;
-  margin: 20px 20px;
+  margin: 40px 20px 20px 20px;
 }
 
 .header {
-
+  margin-bottom: 60px;
 }
 
-.Search {
+.toolbar {
   margin: 20px 0;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  grid-column-gap: 10px;
+}
+
+.refresh {
+  background-color: #66BB6A;
+  color: white;
+  border-radius: 20px;
+  border: none;
+  padding: 4px 10px;
 }
 
 .SearchInput {
   border: none;
+  outline: none !important;
   border-radius: 20px;
-  background-color: #F5F5F5;
-  width: calc(100% - 40px);
+  background-color: #E8F5E9;
   padding: 10px 20px;
+}
+
+.SearchInput:focus {
+  border: none;
+  outline: none !important;
+  box-shadow: 0 0 10px #E8F5E9 !important;
 }
 
 .wrapper {
@@ -26,15 +43,12 @@
   text-align: left;
   color: black;
   border-top: 1px solid #E0E0E0;
-  /* border: 1px solid #F5F5F5; */
-  /* border-radius: 10px; */
-  /* background-color: #FAFAFA; */
   padding: 20px 20px;
 }
 
 .wrapper:hover {
-  color: #01579B;
-  text-decoration: underline #01579B;
+  color: #2E7D32;
+  text-decoration: underline;
 }
 
 .NoticeTitle {

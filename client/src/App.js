@@ -29,6 +29,10 @@ function App() {
     setFilter(filtered);
   };
 
+  const onDataRefreshing = (event) => {
+    // 파이썬으로 홈페이지 재검사
+  };
+
   useEffect(() => {
     getNotices();
   }, []);
@@ -36,10 +40,11 @@ function App() {
   return (
     <div className="App">
       <div className='header'>
-        <h2>PAN</h2>
-        <p>부산대학교 및 정보컴퓨터공학부<br/>공지사항 알리미</p>
+        <h1>PAN</h1>
+        <p style={{fontSize: '12px'}}>부산대학교 및 정보컴퓨터공학부<br/>공지사항 알리미</p>
       </div>
-      <div className='Search'>
+      <div className='toolbar'>
+        <button className='refresh' onClick={event => onDataRefreshing(event)}>데이터<br/>새로고침</button>
         <input type='text' placeholder='search.....' className='SearchInput' onChange={event => onInputChange(event)}></input>
       </div>
       <div>
@@ -49,7 +54,7 @@ function App() {
           return (
             <a href={element.link} key={idx} className='wrapper'>
               <div className='NoticeTitle' href={element.link}>{element.title}</div>
-              <div style={{fontSize: '12px'}}>{element.date.replaceAll(".", "-")}</div>
+              <div style={{fontSize: '12px', color: '#9E9E9E'}}>{element.date.replaceAll(".", "-")}</div>
             </a>
           )
         })
