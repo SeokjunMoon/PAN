@@ -1,3 +1,42 @@
 .App {
   text-align: center;
+  margin: 20px 20px;
+}
+
+.header {
+
+}
+
+.Search {
+  margin: 20px 0;
+}
+
+.SearchInput {
+  border: none;
+  border-radius: 20px;
+  background-color: #F5F5F5;
+  width: calc(100% - 40px);
+  padding: 10px 20px;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  text-decoration: none;
+  text-align: left;
+  color: black;
+  border-top: 1px solid #E0E0E0;
+  /* border: 1px solid #F5F5F5; */
+  /* border-radius: 10px; */
+  /* background-color: #FAFAFA; */
+  padding: 20px 20px;
+}
+
+.wrapper:hover {
+  color: #01579B;
+  text-decoration: underline #01579B;
+}
+
+.NoticeTitle {
+  margin-bottom: 16px;
 }

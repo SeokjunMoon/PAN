@@ -6,33 +6,28 @@ import './App.css';
 function App() {
 
   const [ notices, setNotices ] = useState([]);
+  const [ filter, setFilter ] = useState([]);
 
   const getNotices = async() => {
     const res = await axios.get('/proxy/5000/get/data');
     if (res.data[0] === undefined) {
       let cover = [];
       cover.push(res.data);
-      return setNotices(cover);
+      setNotices(cover);
+      setFilter(cover);
+      return;
     }
+    res.data.reverse();
     setNotices(res.data);
+    setFilter(res.data);
   };
 
-  // const addAllNotices = () => {
-  //   if (notices.length() === 0) return;
-    
-  //   notices.map((notice, idx) = async(e) => {
-  //     e.preventDefault();
-  //     await axios('/proxy/5000/add/data', {
-  //       method: 'POST',
-  //       data: {
-  //         'index': notice['index'],
-  //         'title': notice['title'],
-  //         'link': notice['link'],
-  //         'date': notice['date']
-  //       }
-  //     });
-  //   });
-  // };
+  const onInputChange = (event) => {
+    let filtered = notices.filter((value) => {
+      return value.title.indexOf(event.target.value) !== -1;
+    });
+    setFilter(filtered);
+  };
 
   useEffect(() => {
     getNotices();
@@ -40,19 +35,26 @@ function App() {
 
   return (
     <div className="App">
+      <div className='header'>
+        <h2>PAN</h2>
+        <p>부산대학교 및 정보컴퓨터공학부<br/>공지사항 알리미</p>
+      </div>
+      <div className='Search'>
+        <input type='text' placeholder='search.....' className='SearchInput' onChange={event => onInputChange(event)}></input>
+      </div>
+      <div>
       {
-        notices.length === 0?
-        null: notices.map((element, idx) => {
+        filter.length === 0?
+        null: filter.map((element, idx) => {
           return (
-            <div key={idx} style={{display: 'flex'}}>
-              <div style={{marginLeft: '20px'}}>{element.index}</div>
-              <div style={{marginLeft: '20px'}}>{element.title}</div>
-              <div style={{marginLeft: '20px'}}>{element.link}</div>
-              <div style={{marginLeft: '20px'}}>{element.date}</div>
-            </div>
+            <a href={element.link} key={idx} className='wrapper'>
+              <div className='NoticeTitle' href={element.link}>{element.title}</div>
+              <div style={{fontSize: '12px'}}>{element.date.replaceAll(".", "-")}</div>
+            </a>
           )
         })
       }
+      </div>
     </div>
   );
 }
