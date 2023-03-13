@@ -1,7 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define(
-        'cse',
+        'pnu',
         {
+            type: {
+                type: DataTypes.STRING(45),
+                allowNull: false
+            },
             index: {
                 type: DataTypes.INTEGER,
                 allowNull: false
@@ -23,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
             charset: 'utf8',
             collate: 'utf8_general_ci',
             timestamps: false,
-            tableName: 'cse'
+            tableName: 'pnu'
         }
     )
 };

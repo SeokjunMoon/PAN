@@ -9,17 +9,20 @@ function App() {
   const [ filter, setFilter ] = useState([]);
 
   const getNotices = async() => {
-    const res = await axios.get('/proxy/5000/get/data');
-    if (res.data[0] === undefined) {
+    const pnu_res = await axios.get('/proxy/5000/get/data/');
+    if (pnu_res.data[0] === undefined) {
       let cover = [];
-      cover.push(res.data);
       setNotices(cover);
       setFilter(cover);
       return;
     }
-    res.data.reverse();
-    setNotices(res.data);
-    setFilter(res.data);
+    const sorted_resource = pnu_res.data.sort((a, b) => {
+      if (a.date === b.date) return a.title < b.title;
+      return a.date < b.date;
+    });
+
+    setNotices(sorted_resource);
+    setFilter(sorted_resource);
   };
 
   const onInputChange = (event) => {
@@ -51,10 +54,14 @@ function App() {
       {
         filter.length === 0?
         null: filter.map((element, idx) => {
+          let marking = "";
+          if (element.type === 'pnu') marking = "학교";
+          else if (element.type === 'cse') marking = "정컴";
+
           return (
-            <a href={element.link} key={idx} className='wrapper'>
-              <div className='NoticeTitle' href={element.link}>{element.title}</div>
-              <div style={{fontSize: '12px', color: '#9E9E9E'}}>{element.date.replaceAll(".", "-")}</div>
+            <a href={element.link} key={idx} target='_blank' className='wrapper'>
+              <div className='NoticeTitle' href={element.link}>{"[" + marking + "] " + element.title}</div>
+              <div style={{fontSize: '12px', color: '#9E9E9E'}}>{element.date}</div>
             </a>
           )
         })

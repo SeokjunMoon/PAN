@@ -56,6 +56,7 @@ class CseParser(Parser):
                 date_ = date_info.string
 
                 sources.append({
+                    'id': 0,
                     'index': index_,
                     'title': title_.replace(",", " "),
                     'link': f"{self.base_url}{link_}",
@@ -79,7 +80,7 @@ class CseParser(Parser):
     def saveData(self):
         print("Insert new announcements in database...")
         con, cursor = self.getConnection()
-        insert_sql = "INSERT INTO cse VALUES (%(index)s, %(title)s, %(link)s, %(date)s);"
+        insert_sql = "INSERT INTO cse VALUES (%(id)s, %(index)s, %(title)s, %(link)s, %(date)s);"
 
         for page_source in self.page_sources:
             for notice in page_source:

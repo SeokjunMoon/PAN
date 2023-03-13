@@ -30,23 +30,21 @@ class PnuParser(Parser):
 
     def parseData(self):
         self.notice_page = f"{self.notice_page}1"
-        browser, soup = self.getParser()
+        browser = self.getParser()
         self.getRecentIndex()
 
         print("Parsing announcements...")
         end_point = False
-        page_iter = 1
-        for i in range(1, self.page_count + 1):
-            # browser.switch_to.active_element.find_element(By.XPATH, f'//*[@id="menu14651_obj251"]/div[2]/form[3]/div[1]/div/ul/li[{i}]').click()
+        for i in range(1, 4):
             sources = []
             soup_ = BeautifulSoup(browser.page_source, "html.parser")
-            t_table = soup_.find('table', class_="artclTable artclHorNum1")
+            t_table = soup_.find('table', class_="board-list-table")
             notice_list = t_table.select('tbody tr')
 
             for notice in notice_list:
-                index_info = notice.find('td', class_="_artclTdNum")
-                title_info = notice.find('td', class_="_artclTdTitle").find('a')
-                date_info = notice.find('td', class_="_artclTdRdate")
+                index_info = notice.find('td', class_="num")
+                title_info = notice.find('td', class_="subject").find('a')
+                date_info = notice.find('td', class_="date")
                 
                 index_ = index_info.string
                 if index_ is None:
@@ -57,11 +55,12 @@ class PnuParser(Parser):
                         end_point = True
                         break
 
-                title_ = title_info.find('strong').string
+                title_ = title_info.string.replace("\n", "").replace("\t", "")
                 link_ = title_info['href']
                 date_ = date_info.string
 
                 sources.append({
+                    'id': 0,
                     'index': index_,
                     'title': title_.replace(",", " "),
                     'link': f"{self.base_url}{link_}",
@@ -73,6 +72,8 @@ class PnuParser(Parser):
 
             if end_point is True:
                 break
+
+            browser.switch_to.active_element.find_element(By.XPATH, f'//*[@id="board-wrap"]/div[3]/div/a[{i + 1}]').click()
             
 
         self.page_sources = self.page_sources[::-1]
@@ -85,7 +86,7 @@ class PnuParser(Parser):
     def saveData(self):
         print("Insert new announcements in database...")
         con, cursor = self.getConnection()
-        insert_sql = "INSERT INTO cse VALUES (%(index)s, %(title)s, %(link)s, %(date)s);"
+        insert_sql = "INSERT INTO pnu VALUES (%(id)s, %(index)s, %(title)s, %(link)s, %(date)s);"
 
         for page_source in self.page_sources:
             for notice in page_source:

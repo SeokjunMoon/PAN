@@ -23,7 +23,7 @@ let sequelize = new Sequelize(
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;
 
-    db.Cse = require('./cse')(sequelize, Sequelize);
+    db.Pnu = require('./pnu')(sequelize, Sequelize);
 
     db.sequelize
     .authenticate()
