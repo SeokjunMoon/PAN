@@ -16,10 +16,12 @@ function App() {
       setFilter(cover);
       return;
     }
+
     const sorted_resource = pnu_res.data.sort((a, b) => {
       if (a.date === b.date) return a.title < b.title;
-      return a.date < b.date;
+      return a.date > b.date;
     });
+    sorted_resource.reverse();
 
     setNotices(sorted_resource);
     setFilter(sorted_resource);
@@ -32,12 +34,30 @@ function App() {
     setFilter(filtered);
   };
 
+  const requestRefreshing = async() => {
+    const req_res = await axios.get('/proxy/5000/refresh');
+    if (req_res.data['message'] === "1") {
+      return true;
+    }
+    else {
+      return false;
+    }
+  };
+
   const onDataRefreshing = (event) => {
-    // 파이썬으로 홈페이지 재검사
+    const is_done = requestRefreshing();
+    if (is_done) {
+      alert("데이터 새로고침을 완료하였습니다.");
+      getNotices();
+    }
+    else {
+      alert("데이터 새로고침 오류");
+    }
   };
 
   useEffect(() => {
-    getNotices();
+    const req_res = requestRefreshing();
+    if (req_res) getNotices();
   }, []);
 
   return (
@@ -55,12 +75,13 @@ function App() {
         filter.length === 0?
         null: filter.map((element, idx) => {
           let marking = "";
-          if (element.type === 'pnu') marking = "학교";
-          else if (element.type === 'cse') marking = "정컴";
+          if (element.type === 'pnu') marking = "[학교]";
+          else if (element.type === 'cse') marking = "[정컴]";
+          else if (element.type === 'recruit') marking = "";
 
           return (
             <a href={element.link} key={idx} target='_blank' className='wrapper'>
-              <div className='NoticeTitle' href={element.link}>{"[" + marking + "] " + element.title}</div>
+              <div className='NoticeTitle' href={element.link}>{marking + element.title}</div>
               <div style={{fontSize: '12px', color: '#9E9E9E'}}>{element.date}</div>
             </a>
           )

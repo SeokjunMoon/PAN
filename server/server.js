@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
 const sequelize = require('./models').sequelize;
-const PythonShell = require('python-shell');
+const spawn = require('child_process').spawn;
 
 sequelize.sync();
 
@@ -29,14 +29,17 @@ app.get('/get/data/', (req, res) => {
     })
 })
 
-let options = {
-    mode: 'text',
-    pythonPath: '',
-    pythonOptions: ['-u'],
-    scriptPath: '',
-    args: []
-}
-
 app.get('/refresh', (req, res) => {
-
+    const parse_result = spawn('python3', ['./python/main.py']);
+    parse_result.stdout.on('data', (data) => {
+        console.log(data.toString());
+        res.set('Content-Type', 'text/plain')
+        res.json({ message: "1" });
+    })
+    
+    parse_result.stderr.on('data', (data) => {
+        console.log(data.toString());
+        res.set('Content-Type', 'text/plain')
+        res.json({ message: "0" });
+    })
 })

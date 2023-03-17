@@ -34,7 +34,7 @@
 .SearchInput:focus {
   border: none;
   outline: none !important;
-  box-shadow: 0 0 10px #E8F5E9 !important;
+  box-shadow: 0 0 10px #66BB6A !important;
 }
 
 .wrapper {

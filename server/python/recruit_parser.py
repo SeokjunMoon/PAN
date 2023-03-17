@@ -3,18 +3,18 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 
 
-class PnuParser(Parser):
+class RecruitParser(Parser):
     def __init__(self):
         Parser.__init__(self)
-        self.base_url = "https://www.pusan.ac.kr/kor/CMS/Board/Board.do?"
-        self.notice_page = f"{self.base_url}mgr_seq=3&page="
+        self.base_url = "https://cse.pusan.ac.kr"
+        self.notice_page = f"{self.base_url}/cse/14667/subview.do"
 
 
     def getRecentIndex(self):
         print("Reading database...")
 
         con, cursor = self.getConnection()
-        read_sql = "SELECT * from pnu where type='pnu';"
+        read_sql = "SELECT * from pnu where type='recruit';"
         cursor.execute(read_sql)
         rows = cursor.fetchall()
 
@@ -27,24 +27,24 @@ class PnuParser(Parser):
         con.commit()
         con.close()
 
-
+        
     def parseData(self):
-        self.notice_page = f"{self.notice_page}1"
         browser = self.getParser()
         self.getRecentIndex()
 
         print("Parsing announcements...")
         end_point = False
-        for i in range(1, 4):
+        for i in range(1, 10):
+            browser.switch_to.active_element.find_element(By.XPATH, f'//*[@id="menu14667_obj289"]/div[2]/form[3]/div[1]/div/ul/li[{i}]').click()
             sources = []
             soup_ = BeautifulSoup(browser.page_source, "html.parser")
-            t_table = soup_.find('table', class_="board-list-table")
+            t_table = soup_.find('table', class_="artclTable artclHorNum1")
             notice_list = t_table.select('tbody tr')
 
             for notice in notice_list:
-                index_info = notice.find('td', class_="num")
-                title_info = notice.find('td', class_="subject").find('a')
-                date_info = notice.find('td', class_="date")
+                index_info = notice.find('td', class_="_artclTdNum")
+                title_info = notice.find('td', class_="_artclTdTitle").find('a')
+                date_info = notice.find('td', class_="_artclTdRdate")
                 
                 index_ = index_info.string
                 if index_ is None:
@@ -55,13 +55,13 @@ class PnuParser(Parser):
                         end_point = True
                         break
 
-                title_ = title_info.string.replace("\n", "").replace("\t", "")
+                title_ = title_info.find('strong').string
                 link_ = title_info['href']
                 date_ = date_info.string
 
                 sources.append({
                     'id': 0,
-                    'type': 'pnu',
+                    'type': 'recruit',
                     'index': index_,
                     'title': title_.replace(",", " "),
                     'link': f"{self.base_url}{link_}",
@@ -73,8 +73,6 @@ class PnuParser(Parser):
 
             if end_point is True:
                 break
-
-            browser.switch_to.active_element.find_element(By.XPATH, f'//*[@id="board-wrap"]/div[3]/div/a[{i + 1}]').click()
             
 
         self.page_sources = self.page_sources[::-1]
