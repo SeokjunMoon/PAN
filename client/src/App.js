@@ -2,9 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react'
 import './App.css';
+import './components/NoticeArticle/NoticeArticle'
+import NoticeArticle from './components/NoticeArticle/NoticeArticle';
+
+
 
 function App() {
-
   const [ notices, setNotices ] = useState([]);
   const [ filter, setFilter ] = useState([]);
 
@@ -17,14 +20,8 @@ function App() {
       return;
     }
 
-    const sorted_resource = pnu_res.data.sort((a, b) => {
-      if (a.date === b.date) return a.title < b.title;
-      return a.date > b.date;
-    });
-    sorted_resource.reverse();
-
-    setNotices(sorted_resource);
-    setFilter(sorted_resource);
+    setNotices(pnu_res.data);
+    setFilter(pnu_res.data);
   };
 
   const onInputChange = (event) => {
@@ -36,12 +33,8 @@ function App() {
 
   const requestRefreshing = async() => {
     const req_res = await axios.get('/proxy/5000/refresh');
-    if (req_res.data['message'] === "1") {
-      return true;
-    }
-    else {
-      return false;
-    }
+    if (req_res.data['message'] === "1") return true;
+    else return false;
   };
 
   const onDataRefreshing = (event) => {
@@ -55,39 +48,39 @@ function App() {
     }
   };
 
+  const convertType = (type) => {
+    if (type === 'pnu') return "[학교] ";
+    else if (type === 'cse') return "[정컴] ";
+    else if (type === 'recruit') return "";
+  }
+
   useEffect(() => {
     const req_res = requestRefreshing();
     if (req_res) getNotices();
   }, []);
 
+
+
   return (
     <div className="App">
       <div className='header'>
-        <h1>PAN</h1>
-        <p style={{fontSize: '12px'}}>부산대학교 및 정보컴퓨터공학부<br/>공지사항 알리미</p>
+        <p className='app_title'>PAN</p>
       </div>
       <div className='toolbar'>
         <button className='refresh' onClick={event => onDataRefreshing(event)}>데이터<br/>새로고침</button>
         <input type='text' placeholder='search.....' className='SearchInput' onChange={event => onInputChange(event)}></input>
       </div>
-      <div>
+      <div className='NoticeList'>
       {
         filter.length === 0?
         null: filter.map((element, idx) => {
-          let marking = "";
-          if (element.type === 'pnu') marking = "[학교]";
-          else if (element.type === 'cse') marking = "[정컴]";
-          else if (element.type === 'recruit') marking = "";
-
           return (
-            <a href={element.link} key={idx} target='_blank' className='wrapper'>
-              <div className='NoticeTitle' href={element.link}>{marking + element.title}</div>
-              <div style={{fontSize: '12px', color: '#9E9E9E'}}>{element.date}</div>
-            </a>
+            <NoticeArticle type={convertType(element.type)} title={element.title} link={element.link} date={element.date} key={idx}/>
           )
         })
       }
       </div>
+      <div></div>
     </div>
   );
 }
