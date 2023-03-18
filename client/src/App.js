@@ -42,6 +42,7 @@ function App() {
     if (is_done) {
       alert("데이터 새로고침을 완료하였습니다.");
       getNotices();
+      document.getElementById('search_input').value = "";
     }
     else {
       alert("데이터 새로고침 오류");
@@ -68,7 +69,7 @@ function App() {
       </div>
       <div className='toolbar'>
         <button className='refresh' onClick={event => onDataRefreshing(event)}>데이터<br/>새로고침</button>
-        <input type='text' placeholder='search.....' className='SearchInput' onChange={event => onInputChange(event)}></input>
+        <input type='text' placeholder='search.....' className='SearchInput' id='search_input' onChange={event => onInputChange(event)}></input>
       </div>
       <div className='NoticeList'>
       {
@@ -80,7 +81,7 @@ function App() {
         })
       }
       </div>
-      <div></div>
+      <div style={{height: '1000px'}}></div>
     </div>
   );
 }
