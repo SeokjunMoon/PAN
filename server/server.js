@@ -39,8 +39,4 @@ app.get('/refresh', (req, res) => {
         console.log("Refreshing done.");
         res.json({ message: "1" });
     })
-    
-    // parse_result.stderr.on('data', (data_) => {
-    //     res.json({ message: "0", data: data_ });
-    // })
 })
