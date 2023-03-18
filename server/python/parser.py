@@ -34,7 +34,7 @@ class Parser:
 
 
     def getConnection(self):
-        print("Connecting to mysql database...")
+        # print("Connecting to mysql database...")
         con = pymysql.connect(host='104.196.224.16', user='root', password='ms38559851!',
                                 db='pnu_parser', charset='utf8')
         cursor = con.cursor()

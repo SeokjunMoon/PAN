@@ -11,7 +11,7 @@ class RecruitParser(Parser):
 
 
     def getRecentIndex(self):
-        print("Reading database...")
+        # print("Reading database...")
 
         con, cursor = self.getConnection()
         read_sql = "SELECT * from pnu where type='recruit';"
@@ -23,7 +23,7 @@ class RecruitParser(Parser):
         else:
             self.recent_index = rows[-1][2]
 
-        print("Recent announcement index is", self.recent_index)
+        # print("Recent announcement index is", self.recent_index)
         con.commit()
         con.close()
 
@@ -32,7 +32,7 @@ class RecruitParser(Parser):
         browser = self.getParser()
         self.getRecentIndex()
 
-        print("Parsing announcements...")
+        # print("Parsing announcements...")
         end_point = False
         for i in range(1, 10):
             browser.switch_to.active_element.find_element(By.XPATH, f'//*[@id="menu14667_obj289"]/div[2]/form[3]/div[1]/div/ul/li[{i}]').click()
@@ -78,13 +78,13 @@ class RecruitParser(Parser):
         self.page_sources = self.page_sources[::-1]
         browser.quit()
 
-        print("Complete")
+        # print("Complete")
         print("New announcements is", self.page_sources)
 
 
     def saveData(self):
         if len(self.page_sources) != 0:
-            print("Insert new announcements in database...")
+            # print("Insert new announcements in database...")
             con, cursor = self.getConnection()
             insert_sql = "INSERT INTO pnu VALUES (%(id)s, %(type)s, %(index)s, %(title)s, %(link)s, %(date)s);"
 
@@ -92,8 +92,6 @@ class RecruitParser(Parser):
                 for notice in page_source:
                     cursor.execute(insert_sql, notice)
 
-            print("Complete")
+            # print("Complete")
             con.commit()
             con.close()
-        else:
-            print("No updating")
