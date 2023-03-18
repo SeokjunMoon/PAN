@@ -20,7 +20,9 @@ sequelize.query('SET NAMES utf8;');
 
 
 app.get('/get/data/', (req, res) => {
-    Pnu.findAll()
+    Pnu.findAll({
+        order: [['date', 'DESC']],
+    })
     .then(result => {
         res.send(result);
     })
@@ -30,16 +32,15 @@ app.get('/get/data/', (req, res) => {
 })
 
 app.get('/refresh', (req, res) => {
+    console.log("Database refresing.....");
     const parse_result = spawn('python3', ['./python/main.py']);
     parse_result.stdout.on('data', (data) => {
         console.log(data.toString());
-        res.set('Content-Type', 'text/plain')
+        console.log("Refreshing done.");
         res.json({ message: "1" });
     })
     
-    parse_result.stderr.on('data', (data) => {
-        console.log(data.toString());
-        res.set('Content-Type', 'text/plain')
-        res.json({ message: "0" });
-    })
+    // parse_result.stderr.on('data', (data_) => {
+    //     res.json({ message: "0", data: data_ });
+    // })
 })
