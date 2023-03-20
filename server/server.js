@@ -35,7 +35,7 @@ app.get('/refresh', (req, res) => {
     console.log("Database refresing.....");
     const parse_result = spawn('python3', ['./python/main.py']);
     parse_result.stdout.on('data', (data) => {
-        console.log(data.toString());
+        // console.log(data.toString());
         console.log("Refreshing done.");
         res.json({ message: "1" });
     })

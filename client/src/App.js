@@ -31,22 +31,23 @@ function App() {
     setFilter(filtered);
   };
 
-  const requestRefreshing = async() => {
+  const requestRefreshing = async(e) => {
     const req_res = await axios.get('/proxy/5000/refresh');
-    if (req_res.data['message'] === "1") return true;
-    else return false;
+    if (req_res.data['message'] === "1") {
+      if (e !== undefined) e.target.innerHTML = '데이터<br/>새로고침';
+      return true;
+    }
+    else {
+      if (e !== undefined) e.target.innerHTML = '오류';
+      return false;
+    }
   };
 
   const onDataRefreshing = (event) => {
-    const is_done = requestRefreshing();
-    if (is_done) {
-      alert("데이터 새로고침을 완료하였습니다.");
-      getNotices();
-      document.getElementById('search_input').value = "";
-    }
-    else {
-      alert("데이터 새로고침 오류");
-    }
+    event.target.innerHTML = "로딩중..";
+    document.getElementById('search_input').value = "";
+    requestRefreshing(event);
+    getNotices();
   };
 
   const convertType = (type) => {
@@ -65,10 +66,10 @@ function App() {
   return (
     <div className="App">
       <div className='header'>
-        <p className='app_title'>PAN</p>
+        <div className='app_title'>PAN</div>
       </div>
       <div className='toolbar'>
-        <button className='refresh' onClick={event => onDataRefreshing(event)}>데이터<br/>새로고침</button>
+        <button className='refresh' onClick={(event) => onDataRefreshing(event)}>데이터<br/>새로고침</button>
         <input type='text' placeholder='search.....' className='SearchInput' id='search_input' onChange={event => onInputChange(event)}></input>
       </div>
       <div className='NoticeList'>
