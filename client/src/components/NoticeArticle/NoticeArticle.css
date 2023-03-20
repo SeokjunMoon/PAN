@@ -1,18 +1,19 @@
 .container {
     display: grid;
+    height: 76.8px;
+    margin-bottom: 20px;
+    padding: 20px 20px;
     grid-template-columns: 1fr;
     text-decoration: none;
     text-align: left;
     color: black;
     border: 1px solid #EEEEEE;
-    padding: 20px 20px;
     border-radius: 4px;
-    margin-bottom: 20px;
 }
 
 .container:hover {
     color: #5E35B1;
-    /* text-decoration: underline; */
+    font-weight: 700;
     border: 1px solid #5E35B1;
     transition: border 0.3s;
 }
